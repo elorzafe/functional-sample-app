@@ -1,22 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react';
+import { Amplify } from '@aws-amplify/core';
+import awsconfig from './aws-exports';
+
+import { SignIn } from './SignIn';
+import { initUser } from './initUser';
+import { Main } from './Main';
+
+Amplify.configure(awsconfig);
 
 function App() {
+  const [userToken, setUserToken] = useState();
+  useEffect(() => {
+    initUser(setUserToken);
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {userToken && <Main user={userToken} />}
+        {!userToken && <SignIn />}
       </header>
     </div>
   );
